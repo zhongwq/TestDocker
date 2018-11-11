@@ -2,7 +2,6 @@ language: go
 
 go:
   - 1.8
-  - tip
 
 sudo: required
 
@@ -22,9 +21,8 @@ script:
   - docker build --rm -t wilsonzhong/testdocker .
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_5fbf7abaab3f_key -iv $encrypted_5fbf7abaab3f_iv
-    -in id_rsa.enc -out ~\/.ssh/id_rsa -d
-  - chmod 600~/.ssh/id_rsa
+  - openssl aes-256-cbc -K $encrypted_5fbf7abaab3f_key -iv $encrypted_5fbf7abaab3f_iv -in id_rsa.enc -out ~\/.ssh/id_rsa -d
+  - chmod 600 ~/.ssh/id_rsa
 
 addons:
   ssh_known_hosts: 104.236.150.212
