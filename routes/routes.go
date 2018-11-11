@@ -10,6 +10,10 @@ import (
 	"path/filepath"
 )
 
+type resInfo struct {
+	Msg string
+}
+
 func NewServer() *negroni.Negroni {
 	formatter := render.New();
 	n := negroni.Classic()
@@ -34,12 +38,12 @@ func UserRegisterHandler(formatter *render.Render) http.HandlerFunc {
 			formatter.JSON(w,404,"Username can't be null")
 		}
 
-		res := service.UserRegister(req.PostForm)
+		res, msg := service.UserRegister(req.PostForm)
+		fmt.Println("msg", msg)
 		if res == true {
-			formatter.JSON(w,201,nil) // expected a user id
-			http.Redirect(w,req, "users/"+req.PostForm[`username`][0], 201)
+			formatter.JSON(w,200, resInfo{"Successfully create user!"})
 		} else {
-			formatter.JSON(w,404,nil)
+			formatter.JSON(w,404,resInfo{msg})
 		}
 	}
 }
@@ -51,12 +55,12 @@ func GetUserByNameHandler(r *render.Render) http.HandlerFunc {
 		path := filepath.FromSlash(req.RequestURI)
 		_, name := filepath.Split(path)
 		fmt.Println(name)
-		reqContent := service.GetUserInfo(req.PostForm)
+		reqContent, msg := service.GetUserInfo(req.PostForm)
 		fmt.Println(reqContent)
 		if reqContent.GetName() != "" {
 			r.JSON(w, 200, reqContent)
 		} else {
-			r.JSON(w,404,nil)
+			r.JSON(w,404, resInfo{msg})
 		}
 	}
 }

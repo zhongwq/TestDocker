@@ -6,17 +6,18 @@ import (
 	"fmt"
 )
 
-func GetUserInfo(info map[string][]string) Model.User {
+func GetUserInfo(info map[string][]string) (Model.User, string) {
 	if info[`username`] == nil || info[`password`] == nil {
 		fmt.Println("Login: Error Parameter", info)
+		return Model.User{"", "", "", ""}, "Login: Error Parameter"
 	}
 	return database.GetUserInfo(info[`username`][0], info[`password`][0])
 }
 
-func UserRegister(info map[string][]string) bool {
+func UserRegister(info map[string][]string) (bool, string) {
 	if info[`username`] == nil || info[`password`] == nil || info[`email`] == nil || info[`phone`] == nil {
 		fmt.Println("UserRegister: Error Parameter", info)
-		return false
+		return false, "UserRegister: Error Parameter"
 	}
 
 	return database.InsertUser(info[`username`][0], info[`password`][0], info[`email`][0], info[`phone`][0])

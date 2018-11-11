@@ -4,6 +4,11 @@ go:
   - 1.8
   - tip
 
+sudo: required
+
+services:
+  - docker
+
 notifications:
   email: false
 
@@ -13,7 +18,8 @@ install:
   - go get -u github.com/unrolled/render
   - go get -u github.com/mattn/go-sqlite3
 
-script: true
+script:
+  - docker build --rm -t wilsonzhong/testdocker .
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_5fbf7abaab3f_key -iv $encrypted_5fbf7abaab3f_iv
@@ -24,6 +30,9 @@ addons:
   ssh_known_hosts: 104.236.150.212
 
 after_success:
-  - ssh root@104.236.150.212 "cd ~/TestDocker && sh ./build.sh"
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - docker tag wilsonzhong/testdocker:latest wilsonzhong/testdocker:latest
+  - docker push wilsonzhong/testdocker:latest
+  - ssh root@104.236.150.212 "cd ~/TestDocker && sh ./update.sh"
 
 

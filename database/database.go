@@ -30,27 +30,27 @@ func init() {
 	db.Exec(sql_table)
 }
 
-func InsertUser(username string, password string, phone string, email string) bool {
+func InsertUser(username string, password string, phone string, email string) (bool, string) {
 	stmt, err := db.Prepare("INSERT INTO userinfo(username, password, phone, email) values(?, ?, ?, ?)")
 
 	res, err := stmt.Exec(username, password, phone, email)
 	if err != nil {
-		fmt.Println("Duplicate username")
-		return false
+		fmt.Println(err.Error())
+		return false, "User is exist"
 	}
 
-	id, err := res.LastInsertId()
+	_ , err = res.LastInsertId()
 	if err !=  nil {
-		return false
+		return false, "Fail to insert user"
 	}
-	fmt.Println("User " + string(id) + " has been created")
-	return true
+	return true, "User " + username + " created"
 }
 
-func GetUserInfo(username string, password string) Model.User {
+func GetUserInfo(username string, password string) (Model.User, string) {
 	rows, err := db.Query("SELECT * FROM userinfo WHERE username = ? and password = ?", username, password)
 	if err != nil {
 		fmt.Println("Error when query data")
+		return Model.User{"", "", "", ""}, "Error when query data"
 	}
 
 	if rows.Next() {
@@ -62,12 +62,12 @@ func GetUserInfo(username string, password string) Model.User {
 		err = rows.Scan(&uid, &username, &password, &phone, &email)
 		if err == nil {
 			fmt.Println(username, password, email, phone)
-			return Model.User{username, password, email, phone}
+			return Model.User{username, password, email, phone}, "Create successfully"
 		}
 
-		return Model.User{"","","",""}
+		return Model.User{"","","",""}, "Error when get userinfo"
 	}
 
 
-	return Model.User{"","","",""}
+	return Model.User{"","","",""}, "No user match"
 }
