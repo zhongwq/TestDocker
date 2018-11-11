@@ -35,7 +35,7 @@ func UserRegisterHandler(formatter *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
 		req.ParseForm()
 		if req.PostForm[`username`][0] == "" {
-			formatter.JSON(w,404,"Username can't be null")
+			formatter.JSON(w,404,resInfo{"Username can't be null"})
 		}
 
 		res, msg := service.UserRegister(req.PostForm)
@@ -50,11 +50,14 @@ func UserRegisterHandler(formatter *render.Render) http.HandlerFunc {
 
 func GetUserByNameHandler(r *render.Render) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		fmt.Println("Get by name & passwd")
 		req.ParseForm()
+		for k, v := range req.Form {
+			fmt.Println("key is: ", k)
+			fmt.Println("val is: ", v)
+		}
 		path := filepath.FromSlash(req.RequestURI)
 		_, name := filepath.Split(path)
-		fmt.Println(name)
+		fmt.Println(req.PostForm, name)
 		reqContent, msg := service.GetUserInfo(req.PostForm)
 		fmt.Println(reqContent)
 		if reqContent.GetName() != "" {

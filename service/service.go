@@ -16,7 +16,6 @@ func GetUserInfo(info map[string][]string) (Model.User, string) {
 
 func UserRegister(info map[string][]string) (bool, string) {
 	if info[`username`] == nil || info[`password`] == nil || info[`email`] == nil || info[`phone`] == nil {
-		fmt.Println("UserRegister: Error Parameter", info)
 		return false, "UserRegister: Error Parameter"
 	}
 
