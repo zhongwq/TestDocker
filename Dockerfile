@@ -10,3 +10,4 @@ RUN go get github.com/spf13/pflag
 RUN go build .
 EXPOSE 9999
 ENTRYPOINT ["./TestDocker"]
+
