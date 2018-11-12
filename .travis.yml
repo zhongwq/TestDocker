@@ -31,6 +31,6 @@ after_success:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - docker tag wilsonzhong/testdocker:latest wilsonzhong/testdocker:latest
   - docker push wilsonzhong/testdocker:latest
-  - ssh root@104.236.150.212 "cd ~ && sh update.sh"
+  - ssh root@104.236.150.212 "cd ~ && sh build.sh"
 
 
